@@ -1,0 +1,13 @@
+.error {
+  color: red;
+}
+
+.error-small {
+  color: red;
+  font-size: 12px;
+}
+
+.form-error {
+  border: 2px solid red;
+  border-radius: 4px;
+}
