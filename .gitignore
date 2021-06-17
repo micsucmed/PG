@@ -126,6 +126,7 @@ dmypy.json
 
 # REACT proyect
 # dependencies
+node_modules/
 /node_modules
 /.pnp
 .pnp.js
