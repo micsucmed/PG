@@ -5,6 +5,7 @@ import Nav from "./layout/NavBar";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Home from "./Home";
+import Petitions from "./petition/Petitions";
 import "../css/styles.css";
 
 function App({ url }) {
@@ -14,7 +15,7 @@ function App({ url }) {
   const fetchData = useCallback(async () => {
     const result = await axios.get(url + "api/accounts/current-user/", {
       headers: {
-        "Authorization": `token ${JSON.parse(localStorage.getItem("token"))}`,
+        Authorization: `token ${JSON.parse(localStorage.getItem("token"))}`,
       },
     });
     setUser(result.data);
@@ -49,11 +50,14 @@ function App({ url }) {
             )}
           </Route>
           <Route exact path="/signup">
-          {user !== null ? (
+            {user !== null ? (
               <Redirect to="/" />
             ) : (
               <Signup url={apiURL} logged={fetchData} />
             )}
+          </Route>
+          <Route exact path="/petitions">
+            <Petitions url={apiURL} />
           </Route>
         </div>
       </main>
