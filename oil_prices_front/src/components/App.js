@@ -49,7 +49,11 @@ function App({ url }) {
             )}
           </Route>
           <Route exact path="/signup">
-            <Signup url={apiURL} />
+          {user !== null ? (
+              <Redirect to="/" />
+            ) : (
+              <Signup url={apiURL} logged={fetchData} />
+            )}
           </Route>
         </div>
       </main>

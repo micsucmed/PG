@@ -7,7 +7,7 @@ import PasswordStrengthBar from "react-password-strength-bar";
 // import history from "../history";
 // import "../css/form.css";
 
-const GeneralForm = ({ fields, validateForm, apiRoute, strength, logged }) => {
+const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [showMessage, setShowMessage] = useState(false);
@@ -41,15 +41,7 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, logged }) => {
       axios
         .post(apiRoute, values)
         .then((response) => {
-          if ("token" in response.data) {
-            localStorage.setItem(
-              "token",
-              JSON.stringify(response.data["token"])
-            );
-            logged();
-          } else if ("username" in response.data && "email" in response.data) {
-            console.log(response.data);
-          }
+          submit(response, values);
         })
         .catch((error) => {
           console.log(error);

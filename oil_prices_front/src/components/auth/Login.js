@@ -6,11 +6,11 @@ import { Link } from "react-router-dom";
 const Login = ({ url, logged }) => {
   const fields = [
     {
-      label: "Username",
+      label: "username",
       type: "text",
     },
     {
-      label: "Password",
+      label: "password",
       type: "password",
     },
   ];
@@ -19,6 +19,14 @@ const Login = ({ url, logged }) => {
     const err = {};
     return err;
   };
+
+  const submit = (response) => {
+    localStorage.setItem(
+      "token",
+      JSON.stringify(response.data["token"])
+    );
+    logged();
+  }
 
   return (
     <section id="login">
@@ -31,7 +39,7 @@ const Login = ({ url, logged }) => {
                 fields={fields}
                 validateForm={validateForm}
                 apiRoute={url + "api/accounts/login/"}
-                logged={logged}
+                submit={submit}
               />
               <div className="text-center">
                 <Card.Text>Don't have an account?</Card.Text>
