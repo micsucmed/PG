@@ -13,7 +13,7 @@ from petition.views import createMBGSimulations, createMBGMRSimulations
 class Petitions(APIView):
     def get(self, request):
         petitions = models.Petition.objects.all()
-        serializer = serializers.PetitionSerializer(petitions, many=True)
+        serializer = serializers.PetitionsSerializer(petitions, many=True)
         return Response(serializer.data)
 
     def post(self, request):

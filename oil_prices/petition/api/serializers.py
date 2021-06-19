@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from petition import models
 
-
 class PetitionSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField('get_petition_owner')
     id = serializers.ReadOnlyField()
@@ -10,6 +9,18 @@ class PetitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Petition
         fields = ['id', 'owner', 'num_days', 'num_reps', 'oil_reference', 'date', 'prices', 'sim_model']
+
+    def get_petition_owner(self, petition):
+        petition_owner = petition.owner.id
+        return petition_owner
+
+class PetitionsSerializer(serializers.ModelSerializer):
+    owner = serializers.SerializerMethodField('get_petition_owner')
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = models.Petition
+        fields = ['id', 'owner', 'num_days', 'num_reps', 'oil_reference', 'date', 'sim_model']
 
     def get_petition_owner(self, petition):
         petition_owner = petition.owner.id
