@@ -1,13 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { Container, CardDeck } from "react-bootstrap";
+import Petition from "./Petition";
 
 const Petitions = ({ url }) => {
-  const [simulations, setSimulations] = useState([]);
+  const simDummy = [
+    {
+      id: "Loading...",
+      owner: "Loading...",
+      num_days: "Loading...",
+      num_reps: "Loading...",
+      oil_reference: "Loading...",
+      date: "Loading...",
+      sim_model: "Loading...",
+    },
+  ];
+
+  const [simulations, setSimulations] = useState(simDummy);
 
   const fetchData = useCallback(async () => {
     const result = await axios.get(url + "api/petitions/");
-    setSimulations(result);
-    console.log(result);
+    setSimulations(result.data);
   }, [url]);
 
   useEffect(() => {
@@ -15,10 +28,21 @@ const Petitions = ({ url }) => {
   }, [fetchData]);
 
   const renderSimulations = () => {
-    return <h1>Simulations</h1>;
+    return (
+      <CardDeck>
+        {simulations.map((simulation, i) => {
+          return <Petition key={i} simulation={simulation} />;
+        })}
+      </CardDeck>
+    );
   };
 
-  return renderSimulations();
+  return (
+    <Container>
+      <h1 className="text-center">Your Simulations</h1>
+      {renderSimulations()}
+    </Container>
+  );
 };
 
 export default Petitions;

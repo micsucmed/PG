@@ -9,7 +9,6 @@ import Petitions from "./petition/Petitions";
 import "../css/styles.css";
 
 function App({ url }) {
-  const [apiURL, setApiURL] = useState();
   const [user, setUser] = useState(null);
 
   const fetchData = useCallback(async () => {
@@ -23,9 +22,7 @@ function App({ url }) {
 
   useEffect(() => {
     fetchData();
-    const URL = url;
-    setApiURL(URL);
-  }, [fetchData, url]);
+  }, [fetchData]);
 
   const logout = () => {
     localStorage.setItem("token", null);
@@ -34,10 +31,8 @@ function App({ url }) {
 
   return (
     <Router>
-      <Route path="/">
-        <Nav user={user} logout={logout} />
-      </Route>
-      <main>
+      <Nav user={user} logout={logout} />
+      <main className="pt-5">
         <div className="body">
           <Route exact path="/">
             <Home />
@@ -46,18 +41,18 @@ function App({ url }) {
             {user !== null ? (
               <Redirect to="/" />
             ) : (
-              <Login url={apiURL} logged={fetchData} />
+              <Login url={url} logged={fetchData} />
             )}
           </Route>
           <Route exact path="/signup">
             {user !== null ? (
               <Redirect to="/" />
             ) : (
-              <Signup url={apiURL} logged={fetchData} />
+              <Signup url={url} logged={fetchData} />
             )}
           </Route>
           <Route exact path="/petitions">
-            <Petitions url={apiURL} />
+            <Petitions url={url} />
           </Route>
         </div>
       </main>
