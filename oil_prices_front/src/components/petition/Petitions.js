@@ -19,7 +19,11 @@ const Petitions = ({ url }) => {
   const [simulations, setSimulations] = useState(simDummy);
 
   const fetchData = useCallback(async () => {
-    const result = await axios.get(url + "api/petitions/");
+    const result = await axios.get(url + "api/petitions/", {
+      headers: {
+        Authorization: `token ${JSON.parse(localStorage.getItem("token"))}`,
+      },
+    });
     setSimulations(result.data);
   }, [url]);
 
