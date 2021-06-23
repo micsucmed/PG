@@ -91,16 +91,11 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps):
             #     print(serializer.errors)
 
 # Creates every simulation for a petition of a Reverse Mean Geometric Brownian Motion
-def createMBGMRSimulations(petition_id):
-
-    try:
-        petition = Petition.objects.get(pk=petition_id)
-    except Petition.DoesNotExist:
-        raise Http404
+def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps):
     # Gets the historical data for the prices of the given oil reference
-    end_date = petition.date.strftime('$Y-%m-%d')
+    end_date = p_date
 
-    if petition.oil_reference == 'BRENT':
+    if oil_reference == 'BRENT':
         mydata = quandl.get(
                 "FRED/DCOILBRENTEU",
                 returns="pandas",
@@ -133,13 +128,17 @@ def createMBGMRSimulations(petition_id):
 
     sigma_e = numpy.std(residual)
 
-    n = 252
+    n = num_days
     s0 = mydata['Value'][-1]
-    R = 1000
+    R = num_reps
     S = numpy.zeros((n+1, R))
     S[0,:] = s0
     for i in range(1, n+1):
         S[i,:] = m*(1-numpy.exp(-eta)) + numpy.exp(-eta)*S[i-1,:] + numpy.random.normal(0, sigma_e, size=(R))
+
+    prices = S.tolist()
+
+    return prices
         # for j in range(1, R):
         #     data_serializer = {
         #         'petition': petition_id,
