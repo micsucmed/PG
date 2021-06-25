@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Container, CardDeck } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { Container, CardDeck, Button } from "react-bootstrap";
 import Petition from "./Petition";
 
 const Petitions = ({ url }) => {
@@ -42,9 +43,18 @@ const Petitions = ({ url }) => {
   };
 
   return (
-    <Container>
-      <h1 className="text-center">Your Simulations</h1>
+    <Container fluid>
+      <Container>
+        <h1 className="text-center">Your Simulations</h1>
+      </Container>
       {renderSimulations()}
+      <Container fluid className="text-center pt-5">
+        <Button className="btn-success">
+          <Link style={{ textDecoration: "none", color: "white" }} to="/signup">
+            Create Simulation
+          </Link>
+        </Button>
+      </Container>
     </Container>
   );
 };

@@ -6,6 +6,7 @@ import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Home from "./Home";
 import Petitions from "./petition/Petitions";
+import Simulation from "./simulation/Simulation";
 import "../css/styles.css";
 
 function App({ url }) {
@@ -53,6 +54,9 @@ function App({ url }) {
           </Route>
           <Route exact path="/petitions">
             <Petitions url={url} />
+          </Route>
+          <Route exact path={"/petitions/detail/:id/"}>
+            <Simulation url={url} />
           </Route>
         </div>
       </main>

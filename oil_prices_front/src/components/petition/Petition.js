@@ -6,10 +6,11 @@ import {
   Button,
   Container,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const Petition = ({ simulation }) => {
   return (
-    <Container className="col-6 px-0 py-4">
+    <Container className="col-6 col-lg-4 col-xl-3 px-0 py-4">
       <Card>
         <Card.Header as="h5">
           {"Simulation #" +
@@ -32,7 +33,17 @@ const Petition = ({ simulation }) => {
           </ListGroupItem>
         </ListGroup>
         <Card.Body className="text-center">
-          <Button variant="primary">See dashboard</Button>
+          <Button className="btn-info">
+            <Link
+              to={{
+                pathname: `/petitions/detail/${simulation.id}/`,
+                state: { petitionId: simulation.id },
+              }}
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              See dashboard
+            </Link>
+          </Button>
         </Card.Body>
       </Card>
     </Container>
