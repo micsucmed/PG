@@ -19,6 +19,11 @@ class Petition(models.Model):
         ]
     sim_model = models.CharField(max_length=50, choices=MODEL_CHOICES)
     date = models.DateField(auto_now=False, auto_now_add=False)
+    processed = models.BooleanField(default=False)
+
+    def clean(self):
+        self.processed = True
+        self.save()
 
 class Price(models.Model):
     petition = models.OneToOneField(Petition, on_delete=models.CASCADE)

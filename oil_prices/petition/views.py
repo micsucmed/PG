@@ -1,6 +1,10 @@
 # Django imports
 from django.shortcuts import render
-from petition.models import Petition
+from petition import models
+from petition.api import serializers
+from rest_framework import status
+from rest_framework.response import Response
+
 # from simulation.api.serializers import SimulationSerializer
 from django.http import Http404
 # Data process imports
@@ -19,16 +23,10 @@ from datetime import date, datetime, timedelta
 # Create your views here.
 
 # Creates every simulation for a petition of a Simple Geometric Brownian Model
-def createMBGSimulations(p_date, oil_reference, num_days, num_reps):
-    # try:
-    #     petition = Petition.objects.get(pk=petition_id)
-    # except Petition.DoesNotExist:
-    #     raise Http404
-    # Gets the historical data for the prices of the given oil reference
-    # end_date = petition.date.strftime('%Y-%m-%d')
+def createMBGSimulations(p_date, oil_reference, num_days, num_reps, petition_id):
+
     end_date = p_date
 
-    # if petition.oil_reference == 'BRENT':
     if oil_reference == 'BRENT':
         mydata = quandl.get(
                 "FRED/DCOILBRENTEU",
@@ -60,10 +58,8 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps):
     # Calcular Drift
     drift = ((df['Log-Return'].mean())*252)+(0.5*(sigma**2))
 
-    # Simulacion de Montecarlo con probabilidades neutrales al riesgo y R caminos
-    # n = petition.num_days
+    # Simulacion de Montecarlo con probabilidades neutrales al riesgo y R caminos\
     n = num_days
-    # R = petition.num_reps
     R = num_reps
     s0 = df['Value'].values[-1]
     dt = 1/252
@@ -75,23 +71,16 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps):
         
     prices = s_Q.tolist()
 
-    return prices
-        
-        # for j in range(1, R):
-        #     data_serializer = {
-        #         'petition': petition_id,
-        #         'day': (petition.date+timedelta(i)).strftime('%Y-%m-%d'),
-        #         'replica': j,
-        #         'price': s_Q[i,j]
-        #     }
-            # serializer = SimulationSerializer(data=data_serializer)
-            # if serializer.is_valid():
-            #     serializer.save(petition=Petition.objects.get(pk=petition_id))
-            # else:
-            #     print(serializer.errors)
+    serializer = serializers.PriceSerializer(data={})
+    if serializer.is_valid():
+        petition = models.Petition.objects.get(pk=petition_id)
+        petition.clean()
+        serializer.save(prices=prices, petition=petition)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Creates every simulation for a petition of a Reverse Mean Geometric Brownian Motion
-def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps):
+def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps, petition_id):
     # Gets the historical data for the prices of the given oil reference
     end_date = p_date
 
@@ -138,14 +127,10 @@ def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps):
 
     prices = S.tolist()
 
-    return prices
-        # for j in range(1, R):
-        #     data_serializer = {
-        #         'petition': petition_id,
-        #         'day': petition.date+timedelta(i),
-        #         'replica': j,
-        #         'price': S[i,j]
-        #     }
-            # serializer = SimulationSerializer(data=data_serializer)
-            # if serializer.is_valid():
-            #     serializer.save(petition=Petition.objects.get(pk=petition_id))
+    serializer = serializers.PriceSerializer(data={})
+    if serializer.is_valid():
+        petition = models.Petition.objects.get(pk=petition_id)
+        serializer.save(prices=prices, petition=petition)
+        petition.clean()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

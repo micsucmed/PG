@@ -8,6 +8,7 @@ from account.models import Account
 from petition.api import serializers
 from petition import models
 from petition.views import createMBGSimulations, createMBGMRSimulations
+from petition.tasks import create_petition_prices_task
 
 
 class Petitions(APIView):
@@ -26,16 +27,9 @@ class Petitions(APIView):
             num_days = request.data.get('num_days')
             num_reps = request.data.get('num_reps')
             sim_model = request.data.get('sim_model')
-            if sim_model == 'MBG':
-                prices = createMBGSimulations(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps)
-            if sim_model == 'MBGMR':
-                prices = createMBGMRSimulations(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps)
             serializer.save(owner=request.user)
-            priceSerializer = serializers.PriceSerializer(data={})
-            if priceSerializer.is_valid():
-                priceSerializer.save(prices=prices, petition=models.Petition.objects.get(pk=serializer.data['id']))
-            else:
-                print("could not save prices")
+            petition_id = serializer.data['id']
+            create_petition_prices_task.delay(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps, sim_model=sim_model, petition_id=petition_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

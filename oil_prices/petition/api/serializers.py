@@ -4,11 +4,12 @@ from petition import models
 class PetitionSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField('get_petition_owner')
     id = serializers.ReadOnlyField()
+    processed = serializers.ReadOnlyField()
     # prices = serializers.ListField(child=serializers.ListField(child=serializers.FloatField(read_only=True), read_only=True), read_only=True)
 
     class Meta:
         model = models.Petition
-        fields = ['id', 'owner', 'num_days', 'num_reps', 'oil_reference', 'date', 'sim_model']
+        fields = ['id', 'owner', 'num_days', 'num_reps', 'oil_reference', 'date', 'sim_model', 'processed']
 
     def get_petition_owner(self, petition):
         petition_owner = petition.owner.id
