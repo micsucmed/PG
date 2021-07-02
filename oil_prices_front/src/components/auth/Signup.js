@@ -7,39 +7,27 @@ import GeneralForm from "../layout/GeneralForm";
 const Signup = ({ url, logged }) => {
   const fields = [
     {
-      label: "email",
+      label: "Email",
+      name: "email",
       type: "email",
       muted: "Your information will not be shared with anyone.",
     },
     {
-      label: "username",
+      label: "Username",
+      name: "username",
       type: "text",
     },
     {
-      label: "password",
+      label: "Password",
+      name: "password",
       type: "password",
     },
     {
-      label: "confirm password",
+      label: "Confirm password",
+      name: "confirm password",
       type: "password",
     },
   ];
-
-  const submit = (reponse, values) => {
-    const loginValues = {"username": values.username, "password": values.password};
-    axios
-        .post(url + "api/accounts/login/", loginValues)
-        .then((response) => {
-          localStorage.setItem(
-            "token",
-            JSON.stringify(response.data["token"])
-          );
-          logged();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-  }
 
   const validateForm = (values) => {
     const err = {};
@@ -60,6 +48,22 @@ const Signup = ({ url, logged }) => {
       err["confirm password"] = "Passwords must match";
     }
     return err;
+  };
+
+  const submit = (reponse, values) => {
+    const loginValues = {
+      "username": values.username,
+      "password": values.password,
+    };
+    axios
+      .post(url + "api/accounts/login/", loginValues)
+      .then((response) => {
+        localStorage.setItem("token", JSON.stringify(response.data["token"]));
+        logged();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

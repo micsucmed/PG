@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import axios from "axios";
-import Nav from "./layout/NavBar";
+import Navigation from "./layout/NavBar";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Home from "./Home";
 import Petitions from "./petition/Petitions";
 import Simulation from "./simulation/Simulation";
-import "../css/styles.css";
+import CreatePetition from "./petition/CreatePetition";
 
 function App({ url }) {
   const [user, setUser] = useState(null);
@@ -32,7 +32,7 @@ function App({ url }) {
 
   return (
     <Router>
-      <Nav user={user} logout={logout} />
+      <Navigation user={user} logout={logout} />
       <main className="pt-5">
         <div className="body">
           <Route exact path="/">
@@ -57,6 +57,9 @@ function App({ url }) {
           </Route>
           <Route exact path={"/petitions/detail/:id/"}>
             <Simulation url={url} />
+          </Route>
+          <Route exact path="/create-petition">
+            <CreatePetition url={url} />
           </Route>
         </div>
       </main>

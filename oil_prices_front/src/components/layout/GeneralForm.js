@@ -17,37 +17,63 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
     const object = {};
 
     for (const key of fields) {
-      object[key.label] = "";
+      object[key.name] = "";
     }
 
     setValues(object);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value,
-    });
+    if (event.target.name === "num_days" || event.target.name === "num_reps") {
+      setValues({
+        ...values,
+        [event.target.name]: parseInt(event.target.value),
+      });
+    } else {
+      setValues({
+        ...values,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(values);
     let err = validateForm(values);
     setErrors(err);
     if (_.isEmpty(err)) {
-      if ("Confirm password" in values) {
-        delete values["confirmed password"];
+      if (!("sim_model" in values)) {
+        if ("confirm password" in values) {
+          delete values["confirmed password"];
+        }
+        axios
+          .post(apiRoute, values)
+          .then((response) => {
+            submit(response, values);
+          })
+          .catch((error) => {
+            console.log(error);
+            setServerErr(error.message);
+            toggleShowMessage();
+          });
       }
       axios
-        .post(apiRoute, values)
+        .post(apiRoute, values, {
+          headers: {
+            Authorization: `token ${JSON.parse(localStorage.getItem("token"))}`,
+          },
+        })
         .then((response) => {
-          submit(response, values);
+          console.log(response);
         })
         .catch((error) => {
           console.log(error);
           setServerErr(error.message);
           toggleShowMessage();
         });
+    } else {
+      console.log(err);
     }
   };
 
@@ -82,22 +108,44 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
 
   const renderFields = () => {
     return fields.map((field) => {
+      if (field.type === "select") {
+        return (
+          <Form.Group key={field.label}>
+            <Form.Label htmlFor={field.label}>{field.label}</Form.Label>
+            <Form.Control
+              as={field.type}
+              id={field.label}
+              name={field.name}
+              className={errors[field.name] ? "form-error" : ""}
+              onChange={handleChange}
+            >
+              {field.options.map((option) => {
+                return (
+                  <option key={option.name} value={option.value}>
+                    {option.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
+          </Form.Group>
+        );
+      }
       return (
         <Form.Group key={field.label}>
           <Form.Label htmlFor={field.label}>{field.label}</Form.Label>
           <Form.Control
             type={field.type}
             id={field.label}
-            name={field.label}
-            className={errors[field.label] ? "form-error" : ""}
+            name={field.name}
+            className={errors[field.name] ? "form-error" : ""}
             onChange={handleChange}
           />
           {renderMuted(field)}
           {errors[field.label] && (
-            <p className="error-small">{errors[field.label]}</p>
+            <p className="error-small">{errors[field.name]}</p>
           )}
           {field.label === "password" && strength && (
-            <PasswordStrengthBar password={values[field.label]} />
+            <PasswordStrengthBar password={values[field.name]} />
           )}
         </Form.Group>
       );

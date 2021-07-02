@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 const Login = ({ url, logged }) => {
   const fields = [
     {
-      label: "username",
+      label: "Username",
+      name: "username",
       type: "text",
     },
     {
-      label: "password",
+      label: "Password",
+      name: "password",
       type: "password",
     },
   ];
@@ -21,12 +23,9 @@ const Login = ({ url, logged }) => {
   };
 
   const submit = (response) => {
-    localStorage.setItem(
-      "token",
-      JSON.stringify(response.data["token"])
-    );
+    localStorage.setItem("token", JSON.stringify(response.data["token"]));
     logged();
-  }
+  };
 
   return (
     <section id="login">
@@ -43,14 +42,9 @@ const Login = ({ url, logged }) => {
               />
               <div className="text-center">
                 <Card.Text>Don't have an account?</Card.Text>
-                <Button>
-                  <Link
-                    style={{ textDecoration: "none", color: "white" }}
-                    to="/signup"
-                  >
-                    Signup
-                  </Link>
-                </Button>
+                <Link to="/signup">
+                  <Button variant="link">Signup</Button>
+                </Link>
               </div>
             </Card.Body>
           </Card>
