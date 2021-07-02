@@ -30,13 +30,17 @@ const Petitions = ({ url }) => {
 
   useEffect(() => {
     fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000);
+    return () => clearInterval(interval);
   }, [fetchData]);
 
   const renderSimulations = () => {
     return (
       <CardDeck>
         {simulations.map((simulation, i) => {
-          return <Petition key={i} simulation={simulation} />;
+          return <Petition key={i} simulation={simulation} url={url} />;
         })}
       </CardDeck>
     );
@@ -50,7 +54,10 @@ const Petitions = ({ url }) => {
       {renderSimulations()}
       <Container fluid className="text-center pt-5">
         <Button className="btn-success">
-          <Link style={{ textDecoration: "none", color: "white" }} to="/signup">
+          <Link
+            style={{ textDecoration: "none", color: "white" }}
+            to="/create-petition"
+          >
             Create Simulation
           </Link>
         </Button>
