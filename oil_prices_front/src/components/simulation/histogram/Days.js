@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Histogram from "./Histogram";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import RangeSlider from "react-bootstrap-range-slider";
-import LoadingIndicator from "../layout/LoadingIndicator";
+import LoadingIndicator from "../../layout/LoadingIndicator";
 
 const Days = ({ prices }) => {
   const [value, setValue] = useState(1);
@@ -14,7 +14,7 @@ const Days = ({ prices }) => {
   };
 
   return (
-    <Col>
+    <Col className="pl-1 pr-2">
       <Card>
         <Card.Header>Oil price histogram for choosen day</Card.Header>
         <Card.Body>

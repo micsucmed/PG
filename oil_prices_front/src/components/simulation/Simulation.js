@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { trackPromise } from "react-promise-tracker";
-import Paths from "./Paths";
 import Parameters from "./Parameters";
-import Days from "./Days";
+import Graphs from "./Graphs";
 
 const Simulation = ({ url }) => {
   const simDummy = {
@@ -66,10 +65,7 @@ const Simulation = ({ url }) => {
     <Container fluid>
       <Container fluid>
         <Parameters simulation={simulation} />
-        <Row>
-          <Paths prices={prices} />
-          <Days prices={prices} />
-        </Row>
+        <Graphs prices={prices} />
       </Container>
     </Container>
   );

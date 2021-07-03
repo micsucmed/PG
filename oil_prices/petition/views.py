@@ -74,8 +74,8 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps, petition_id)
     serializer = serializers.PriceSerializer(data={})
     if serializer.is_valid():
         petition = models.Petition.objects.get(pk=petition_id)
-        petition.clean()
         serializer.save(prices=prices, petition=petition)
+        petition.clean()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

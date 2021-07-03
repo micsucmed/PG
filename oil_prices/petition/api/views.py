@@ -54,6 +54,6 @@ class PetitionDetail(APIView):
 
 class Prices(APIView):
     def get(self, request, petition_id):
-        prices = models.Price.objects.filter(petition_id=petition_id)
-        serializer = serializers.PriceSerializer(prices, many=True)
+        prices = models.Price.objects.get(petition_id=petition_id)
+        serializer = serializers.PriceSerializer(prices)
         return Response(serializer.data)
