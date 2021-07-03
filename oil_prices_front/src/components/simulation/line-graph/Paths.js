@@ -1,7 +1,7 @@
 import React from "react";
 import LineGraph from "./LineGraph";
 import { Col, Card } from "react-bootstrap";
-import LoadingIndicator from "../layout/LoadingIndicator";
+import LoadingIndicator from "../../layout/LoadingIndicator";
 
 const Paths = ({ prices }) => {
   const renderLineGraph = () => {
@@ -9,7 +9,7 @@ const Paths = ({ prices }) => {
   };
 
   return (
-    <Col>
+    <Col className="pl-1 pr-2">
       <Card>
         <Card.Header>Oil price for every path and day simulated</Card.Header>
         <Card.Body>

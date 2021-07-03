@@ -44,6 +44,7 @@ const Histogram = ({ data, p }) => {
       .range([height, 5]);
 
     const bars = g.selectAll("rect").data(bins);
+    console.log(bars.enter());
 
     bars
       .enter()
@@ -59,6 +60,34 @@ const Histogram = ({ data, p }) => {
         return height - y(d.length);
       })
       .style("fill", function (d) {
+        if (d.x1 > ic_l && d.x0 < ic_l) {
+          g.append("rect")
+            .attr("transform", "translate(" + x(d.x0) + "," + y(d.length) + ")")
+            .attr("width", x(ic_l) - x(d.x0))
+            .attr("height", height - y(d.length))
+            .style("fill", "#69b3a2");
+
+          g.append("rect")
+            .attr("transform", "translate(" + x(ic_l) + "," + y(d.length) + ")")
+            .attr("width", x(d.x1) - x(ic_l))
+            .attr("height", height - y(d.length))
+            .style("fill", "orange");
+          return "transparent";
+        }
+        if (d.x0 < ic_r && d.x1 > ic_r) {
+          g.append("rect")
+            .attr("transform", "translate(" + x(d.x0) + "," + y(d.length) + ")")
+            .attr("width", x(ic_r) - x(d.x0))
+            .attr("height", height - y(d.length))
+            .style("fill", "orange");
+
+          g.append("rect")
+            .attr("transform", "translate(" + x(ic_r) + "," + y(d.length) + ")")
+            .attr("width", x(d.x1) - x(ic_r))
+            .attr("height", height - y(d.length))
+            .style("fill", "#69b3a2");
+          return "transparent";
+        }
         if (d.x0 > ic_l && d.x0 < ic_r) {
           return "orange";
         } else {
@@ -85,25 +114,38 @@ const Histogram = ({ data, p }) => {
       .append("text")
       .attr("class", "y label")
       .attr("text-anchor", "end")
-      .attr("y", 6)
+      .attr("y", 0)
       .attr("dy", ".75em")
       .attr("transform", "rotate(-90)")
       .text("Frequency");
 
-    svg
-      .append("line")
+    g.append("line")
       .attr("x1", x(ic_l))
       .attr("x2", x(ic_l))
-      .attr("y1", y(0))
-      .attr("y2", y(1600))
+      .attr("y1", 0)
+      .attr("y2", height)
       .attr("stroke", "grey")
       .attr("stroke-dasharray", "4");
-    svg
-      .append("text")
-      .attr("x", x(ic_l))
-      .attr("y", y(1400))
-      .text("threshold: 140")
-      .style("font-size", "15px");
+
+    g.append("line")
+      .attr("x1", x(ic_r))
+      .attr("x2", x(ic_r))
+      .attr("y1", y(0))
+      .attr("y2", 0)
+      .attr("stroke", "grey")
+      .attr("stroke-dasharray", "4");
+
+    g.append("text")
+      .attr("x", x(ic_l) - 42)
+      .attr("y", 20)
+      .text(`${parseFloat(ic_l.toFixed(5))}`)
+      .style("font-size", "10px");
+
+    g.append("text")
+      .attr("x", x(ic_r) + 2)
+      .attr("y", 20)
+      .text(`${parseFloat(ic_r.toFixed(5))}`)
+      .style("font-size", "10px");
   };
 
   return (

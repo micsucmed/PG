@@ -33,7 +33,7 @@ function App({ url }) {
   return (
     <Router>
       <Navigation user={user} logout={logout} />
-      <main className="pt-5">
+      <main>
         <div className="body">
           <Route exact path="/">
             <Home />
