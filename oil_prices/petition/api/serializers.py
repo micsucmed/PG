@@ -19,11 +19,24 @@ class PriceSerializer(serializers.ModelSerializer):
     petition = serializers.SerializerMethodField('get_price_petition')
     id = serializers.ReadOnlyField()
     prices = serializers.ListField(child=serializers.ListField(child=serializers.FloatField(read_only=True), read_only=True), read_only=True)
+    ci = serializers.ListField(child=serializers.ListField(child=serializers.ListField(child=serializers.FloatField(read_only=True), read_only=True), read_only=True), read_only=True)
 
     class Meta:
         model = models.Price
-        fields = ['id', 'petition', 'prices']
+        fields = ['id', 'petition', 'prices', 'ci']
 
     def get_price_petition(self, price):
         price_petition = price.petition.id
         return price_petition
+
+# class ConfidenceIntervalSerializer(serializers.ModelSerializer):
+#     petition = serializers.SerializerMethodField('get_c_i_petition')
+#     id = serializers.ReadOnlyField()
+
+#     class Meta:
+#         model = models.ConfidenceInterval
+#         fields = ['id', 'petition', 'ci']
+
+#     def get_c_i_petition(self, c_i):
+#         c_i_petition = c_i.petition.id
+#         return c_i_petition

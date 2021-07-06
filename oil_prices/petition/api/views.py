@@ -29,6 +29,7 @@ class Petitions(APIView):
             sim_model = request.data.get('sim_model')
             serializer.save(owner=request.user)
             petition_id = serializer.data['id']
+            # createMBGSimulations(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps, petition_id=petition_id)
             create_petition_prices_task.delay(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps, sim_model=sim_model, petition_id=petition_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -57,3 +58,9 @@ class Prices(APIView):
         prices = models.Price.objects.get(petition_id=petition_id)
         serializer = serializers.PriceSerializer(prices)
         return Response(serializer.data)
+
+# class Intervals(APIView):
+#     def get(self, request, petition_id):
+#         cis = models.ConfidenceInterval.objects.get(petition_id=petition_id)
+#         serializer = serializers.ConfidenceIntervalSerializer(cis)
+#         return Response(serializer.data)
