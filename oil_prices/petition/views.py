@@ -19,6 +19,7 @@ import json
 from sklearn.linear_model import LinearRegression
 from fredapi import Fred
 from datetime import date, datetime, timedelta
+from scipy.stats import norm
 
 # Create your views here.
 
@@ -66,16 +67,62 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps, petition_id)
     sqrt_dt = math.sqrt(dt)
     s_Q = numpy.zeros((n+1, R))
     s_Q[0,:]=s0
+    ci_95 = numpy.zeros((n+1, 2))
+    ci_90 = numpy.zeros((n+1, 2))
+    ci_50 = numpy.zeros((n+1, 2))
+    ci_25 = numpy.zeros((n+1, 2))
+    ci_10 = numpy.zeros((n+1, 2))
+    n_inv_95 = norm.ppf((0.95 + (1 - 0.95) / 2))
+    n_inv_90 = norm.ppf((0.90 + (1 - 0.90) / 2))
+    n_inv_50 = norm.ppf((0.5 + (1 - 0.5) / 2))
+    n_inv_25 = norm.ppf((0.25 + (1 - 0.25) / 2))
+    n_inv_10 = norm.ppf((0.1 + (1 - 0.1) / 2))
+    B = 1000
     for i in range(1,n+1):
         s_Q[i,:]=s_Q[i-1,:]*(numpy.exp((rf-((sigma**2)/2))*dt+sigma*numpy.random.normal(size=(1,R))*math.sqrt(dt)))
+        mub = numpy.zeros((B, 1))
+        for j in range(1,B):
+            samp_b = numpy.random.choice(s_Q[i], size=len(s_Q[i]), replace=True, p=None)
+            mub[j] = numpy.mean(samp_b)
+
+        se = numpy.std(mub)
+        ci_95[i,0] = numpy.mean(mub) - n_inv_95*se
+        ci_95[i,1] = numpy.mean(mub) + n_inv_95*se
+        ci_90[i,0] = numpy.mean(mub) - n_inv_90*se
+        ci_90[i,1] = numpy.mean(mub) + n_inv_90*se
+        ci_50[i,0] = numpy.mean(mub) - n_inv_50*se
+        ci_50[i,1] = numpy.mean(mub) + n_inv_50*se
+        ci_25[i,0] = numpy.mean(mub) - n_inv_25*se
+        ci_25[i,1] = numpy.mean(mub) + n_inv_25*se
+        ci_10[i,0] = numpy.mean(mub) - n_inv_10*se
+        ci_10[i,1] = numpy.mean(mub) + n_inv_10*se
+    
+    ci_95[0,0] = numpy.mean(s_Q[0])
+    ci_95[0,1] = numpy.mean(s_Q[0])
+    ci_90[0,0] = numpy.mean(s_Q[0])
+    ci_90[0,1] = numpy.mean(s_Q[0])
+    ci_50[0,0] = numpy.mean(s_Q[0])
+    ci_50[0,1] = numpy.mean(s_Q[0])
+    ci_25[0,0] = numpy.mean(s_Q[0])
+    ci_25[0,1] = numpy.mean(s_Q[0])
+    ci_10[0,0] = numpy.mean(s_Q[0])
+    ci_10[0,1] = numpy.mean(s_Q[0])
+
+    cis = numpy.array([ci_10, ci_25, ci_50, ci_90, ci_95])
         
     prices = s_Q.tolist()
+    lists_ci = cis.tolist()
 
     serializer = serializers.PriceSerializer(data={})
+    # serializer_ci = serializers.ConfidenceIntervalSerializer(data={})
     if serializer.is_valid():
         petition = models.Petition.objects.get(pk=petition_id)
-        serializer.save(prices=prices, petition=petition)
+        serializer.save(ci=lists_ci, prices=prices, petition=petition)
         petition.clean()
+        # if serializer_ci.is_valid():
+        #     serializer_ci.save(ci=lists_ci, petition=petition)
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -122,15 +169,62 @@ def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps, petition_i
     R = num_reps
     S = numpy.zeros((n+1, R))
     S[0,:] = s0
+    ci_95 = numpy.zeros((n+1, 2))
+    ci_90 = numpy.zeros((n+1, 2))
+    ci_50 = numpy.zeros((n+1, 2))
+    ci_25 = numpy.zeros((n+1, 2))
+    ci_10 = numpy.zeros((n+1, 2))
+    n_inv_95 = norm.ppf((0.95 + (1 - 0.95) / 2))
+    n_inv_90 = norm.ppf((0.90 + (1 - 0.90) / 2))
+    n_inv_50 = norm.ppf((0.5 + (1 - 0.5) / 2))
+    n_inv_25 = norm.ppf((0.25 + (1 - 0.25) / 2))
+    n_inv_10 = norm.ppf((0.1 + (1 - 0.1) / 2))
+    mub = numpy.zeros((n+1, 1))
+    mub[0,:] = numpy.mean(S[0,:])
+    B = 1000
     for i in range(1, n+1):
         S[i,:] = m*(1-numpy.exp(-eta)) + numpy.exp(-eta)*S[i-1,:] + numpy.random.normal(0, sigma_e, size=(R))
+        for j in range(1,B):
+            samp_b = numpy.random.choice(S[i], size=len(S[i]), replace=True, p=None)
+            mub[i] = numpy.mean(samp_b)
 
+        se = numpy.std(mub)
+        ci_95[i,0] = numpy.mean(S[i]) - n_inv_95*se
+        ci_95[i,1] = numpy.mean(S[i]) + n_inv_95*se
+        ci_90[i,0] = numpy.mean(S[i]) - n_inv_90*se
+        ci_90[i,1] = numpy.mean(S[i]) + n_inv_90*se
+        ci_50[i,0] = numpy.mean(S[i]) - n_inv_50*se
+        ci_50[i,1] = numpy.mean(S[i]) + n_inv_50*se
+        ci_25[i,0] = numpy.mean(S[i]) - n_inv_25*se
+        ci_25[i,1] = numpy.mean(S[i]) + n_inv_25*se
+        ci_10[i,0] = numpy.mean(S[i]) - n_inv_10*se
+        ci_10[i,1] = numpy.mean(S[i]) + n_inv_10*se
+
+    ci_95[0,0] = numpy.mean(S[0]) - n_inv_95*se
+    ci_95[0,1] = numpy.mean(S[0]) + n_inv_95*se
+    ci_90[0,0] = numpy.mean(S[0]) - n_inv_90*se
+    ci_90[0,1] = numpy.mean(S[0]) + n_inv_90*se
+    ci_50[0,0] = numpy.mean(S[0]) - n_inv_50*se
+    ci_50[0,1] = numpy.mean(S[0]) + n_inv_50*se
+    ci_25[0,0] = numpy.mean(S[0]) - n_inv_25*se
+    ci_25[0,1] = numpy.mean(S[0]) + n_inv_25*se
+    ci_10[0,0] = numpy.mean(S[0]) - n_inv_10*se
+    ci_10[0,1] = numpy.mean(S[0]) + n_inv_10*se
+
+    cis = numpy.array([ci_10, ci_25, ci_50, ci_90, ci_95])
+
+    lists_ci = cis.tolist()
     prices = S.tolist()
 
     serializer = serializers.PriceSerializer(data={})
+    # serializer_ci = serializers.ConfidenceIntervalSerializer(data={})
     if serializer.is_valid():
         petition = models.Petition.objects.get(pk=petition_id)
-        serializer.save(prices=prices, petition=petition)
+        serializer.save(ci=lists_ci, prices=prices, petition=petition)
         petition.clean()
+        # if serializer_ci.is_valid():
+        #     serializer_ci.save(ci=lists_ci, petition=petition)
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -28,3 +28,4 @@ class Petition(models.Model):
 class Price(models.Model):
     petition = models.OneToOneField(Petition, on_delete=models.CASCADE)
     prices = ArrayField(ArrayField(models.FloatField()))
+    ci = ArrayField(ArrayField(ArrayField(models.FloatField())))
