@@ -15,7 +15,15 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# CELERY_BROKER_URL = 'amqps://agagwdfv:Gm4FHgd3jelGD8BhuI-xH1sXzz5Abpal@toad.rmq.cloudamqp.com/agagwdfv'
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672'
+broker_pool_limit = 1
+broker_connection_timeout = 30
+broker_heartbeat = None
+result_backend = None 
+event_queue_expires = 60 
+worker_prefetch_multiplier = 1 
+worker_concurrency = 50 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/

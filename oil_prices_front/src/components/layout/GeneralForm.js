@@ -39,7 +39,6 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(values);
     let err = validateForm(values);
     setErrors(err);
     if (_.isEmpty(err)) {
@@ -57,21 +56,24 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
             setServerErr(error.message);
             toggleShowMessage();
           });
+      } else {
+        axios
+          .post(apiRoute, values, {
+            headers: {
+              Authorization: `token ${JSON.parse(
+                localStorage.getItem("token")
+              )}`,
+            },
+          })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+            setServerErr(error.message);
+            toggleShowMessage();
+          });
       }
-      axios
-        .post(apiRoute, values, {
-          headers: {
-            Authorization: `token ${JSON.parse(localStorage.getItem("token"))}`,
-          },
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-          setServerErr(error.message);
-          toggleShowMessage();
-        });
     } else {
       console.log(err);
     }

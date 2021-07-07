@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fjalla+One&family=Playball&display=swap");
+
+.banner {
+  background-image: url("https://i.insider.com/5f80bb5d4c3b2e0019bba42a");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #464646;
+  color: white;
+  height: 50vh;
+  position: relative;
+}
+
+.large-text {
+  color: white;
+  font-size: 100px;
+  font-family: "Fjalla One", sans-serif;
+  font-weight: bolder;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  margin-top: -60px;
+}
+.middle {
+  vertical-align: middle;
+}
+
+.navbar {
+  background-color: #224870;
+}
+
+.btn-secondary {
+  background-color: #122c34;
+  border: #122c34;
+}
+
+.intro-title {
+  color: #224870;
+  font-family: "Fjalla One", sans-serif;
+  font-style: italic;
+  text-align: center;
+}
+
+.intro {
+  color: #2a4494;
+  font-family: "Fjalla One", sans-serif;
+  font-style: italic;
+  text-align: center;
+}

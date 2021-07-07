@@ -47,12 +47,14 @@ const Petitions = ({ url }) => {
   };
 
   return (
-    <Container fluid>
+    <Container fluid className="py-3">
       <Container>
-        <h1 className="text-center">Your Simulations</h1>
+        <h1 className="text-center">SIMULATIONS</h1>
       </Container>
+      <hr />
       {renderSimulations()}
-      <Container fluid className="text-center pt-5">
+      <hr />
+      <Container fluid className="text-center pt-3">
         <Button className="btn-success">
           <Link
             style={{ textDecoration: "none", color: "white" }}

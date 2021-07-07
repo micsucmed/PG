@@ -179,14 +179,13 @@ def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps, petition_i
     n_inv_50 = norm.ppf((0.5 + (1 - 0.5) / 2))
     n_inv_25 = norm.ppf((0.25 + (1 - 0.25) / 2))
     n_inv_10 = norm.ppf((0.1 + (1 - 0.1) / 2))
-    mub = numpy.zeros((n+1, 1))
-    mub[0,:] = numpy.mean(S[0,:])
     B = 1000
     for i in range(1, n+1):
         S[i,:] = m*(1-numpy.exp(-eta)) + numpy.exp(-eta)*S[i-1,:] + numpy.random.normal(0, sigma_e, size=(R))
+        mub = numpy.zeros((B, 1))
         for j in range(1,B):
             samp_b = numpy.random.choice(S[i], size=len(S[i]), replace=True, p=None)
-            mub[i] = numpy.mean(samp_b)
+            mub[j] = numpy.mean(samp_b)  
 
         se = numpy.std(mub)
         ci_95[i,0] = numpy.mean(S[i]) - n_inv_95*se
@@ -200,16 +199,16 @@ def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps, petition_i
         ci_10[i,0] = numpy.mean(S[i]) - n_inv_10*se
         ci_10[i,1] = numpy.mean(S[i]) + n_inv_10*se
 
-    ci_95[0,0] = numpy.mean(S[0]) - n_inv_95*se
-    ci_95[0,1] = numpy.mean(S[0]) + n_inv_95*se
-    ci_90[0,0] = numpy.mean(S[0]) - n_inv_90*se
-    ci_90[0,1] = numpy.mean(S[0]) + n_inv_90*se
-    ci_50[0,0] = numpy.mean(S[0]) - n_inv_50*se
-    ci_50[0,1] = numpy.mean(S[0]) + n_inv_50*se
-    ci_25[0,0] = numpy.mean(S[0]) - n_inv_25*se
-    ci_25[0,1] = numpy.mean(S[0]) + n_inv_25*se
-    ci_10[0,0] = numpy.mean(S[0]) - n_inv_10*se
-    ci_10[0,1] = numpy.mean(S[0]) + n_inv_10*se
+    ci_95[0,0] = numpy.mean(S[0])
+    ci_95[0,1] = numpy.mean(S[0])
+    ci_90[0,0] = numpy.mean(S[0])
+    ci_90[0,1] = numpy.mean(S[0])
+    ci_50[0,0] = numpy.mean(S[0])
+    ci_50[0,1] = numpy.mean(S[0])
+    ci_25[0,0] = numpy.mean(S[0])
+    ci_25[0,1] = numpy.mean(S[0])
+    ci_10[0,0] = numpy.mean(S[0])
+    ci_10[0,1] = numpy.mean(S[0])
 
     cis = numpy.array([ci_10, ci_25, ci_50, ci_90, ci_95])
 

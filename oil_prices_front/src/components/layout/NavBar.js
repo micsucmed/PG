@@ -16,7 +16,7 @@ const Navigation = (props) => {
       return (
         <Nav.Item onClick={() => props.logout()}>
           <Nav.Link as={Link} to="/">
-            <Button variant="secondary">Logout</Button>
+            <Button variant="secondary">Sign out</Button>
           </Nav.Link>
         </Nav.Item>
       );
@@ -37,7 +37,7 @@ const Navigation = (props) => {
 
   return (
     <React.Fragment>
-      <Navbar sticky="top" bg="dark" variant="dark">
+      <Navbar sticky="top" variant="dark">
         <Navbar.Brand as={Link} to="/">
           OIL PRICES
         </Navbar.Brand>

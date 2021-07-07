@@ -2,8 +2,9 @@ import React from "react";
 import { Tab, Nav, Row, Col } from "react-bootstrap";
 import Paths from "./line-graph/Paths";
 import Days from "./histogram/Days";
+import ConInt from "./trend-chart/ConInt";
 
-const Graphs = ({ prices }) => {
+const Graphs = ({ prices, ci }) => {
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="line-graph">
       <Row className="py-3">
@@ -15,6 +16,9 @@ const Graphs = ({ prices }) => {
             <Nav.Item>
               <Nav.Link eventKey="histogram">Histogram</Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="trend-chart">Trend Chart</Nav.Link>
+            </Nav.Item>
           </Nav>
         </Col>
         <Col md={8}>
@@ -24,6 +28,9 @@ const Graphs = ({ prices }) => {
             </Tab.Pane>
             <Tab.Pane eventKey="histogram">
               <Days prices={prices} />
+            </Tab.Pane>
+            <Tab.Pane eventKey="trend-chart">
+              <ConInt ci={ci} />
             </Tab.Pane>
           </Tab.Content>
         </Col>

@@ -1,17 +1,23 @@
 import React from "react";
-import { Container, Row, Col, Image } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 function Home() {
   return (
     <Container fluid className="px-0">
-      <Row>
-        <Col className="col-5">
-          <h1>WELCOME TO OIL PRICES</h1>
-        </Col>
-        <Col className="col-7 pl-0 mh-100">
-          <Image src="https://wallpapercave.com/wp/wp2128235.png" />
-        </Col>
-      </Row>
+      <Container fluid className="px-0 banner">
+        <h1 className="large-text align-middle"> WELCOME TO OIL PRICES</h1>
+      </Container>
+      <Container className="pt-5 px-5">
+        <Container className="px-5">
+          <h2 className="intro-title">What can you do here?</h2>
+          <hr />
+          <h3 className="intro">
+            Estimate oil prices for BRENT and WTI markets using stocastic
+            methods: Geometric Brownian Motion and Geometric Brownian Motion
+            with Mean Reversion .
+          </h3>
+        </Container>
+      </Container>
     </Container>
   );
 }

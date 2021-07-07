@@ -67,7 +67,7 @@ const Signup = ({ url, logged }) => {
   };
 
   return (
-    <Row className="justify-content-md-center">
+    <Row className="justify-content-md-center pt-5">
       <Col xs="6">
         <Card>
           <Card.Body>

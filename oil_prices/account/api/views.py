@@ -9,9 +9,9 @@ from account.models import Account
 from account.api.serializers import RegistrationSerializer, AccountSerializer
 
 class AccountCreateAPIView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
     queryset = Account.objects.all()
     serializer_class = RegistrationSerializer
-    permission_classes = (AllowAny,)
 
 class AccountList(APIView):
     def get(self, request):

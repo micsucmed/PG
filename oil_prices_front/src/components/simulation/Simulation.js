@@ -22,9 +22,21 @@ const Simulation = ({ url }) => {
     [0, 0],
   ];
 
+  const ciDummy = [
+    [
+      [0, 0],
+      [0, 0],
+    ],
+    [
+      [0, 0],
+      [0, 0],
+    ],
+  ];
+
   const { id } = useParams();
   const [simulation, setSimulation] = useState(simDummy);
   const [prices, setPrices] = useState(priceDummy);
+  const [ci, setCi] = useState(ciDummy);
 
   const fetchSimulation = useCallback(async () => {
     const resultSimulation = await axios.get(
@@ -48,6 +60,7 @@ const Simulation = ({ url }) => {
         })
         .then((response) => {
           setPrices(response.data.prices);
+          setCi(response.data.ci);
         })
         .catch((err) => {
           console.log(err);
@@ -62,11 +75,9 @@ const Simulation = ({ url }) => {
   }, [fetchSimulation, fetchPrices]);
 
   return (
-    <Container fluid>
-      <Container fluid>
-        <Parameters simulation={simulation} />
-        <Graphs prices={prices} />
-      </Container>
+    <Container fluid className="py-3">
+      <Parameters simulation={simulation} />
+      <Graphs prices={prices} ci={ci} />
     </Container>
   );
 };

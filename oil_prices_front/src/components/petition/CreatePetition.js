@@ -70,11 +70,11 @@ const CreatePetition = ({ url }) => {
   const submit = () => {};
 
   return (
-    <Row className="justify-content-md-center">
+    <Row className="justify-content-md-center pt-5">
       <Col xs="6">
         <Card>
           <Card.Body>
-            <Card.Title>Singup</Card.Title>
+            <Card.Title>Create Simulation</Card.Title>
             <GeneralForm
               fields={fields}
               validateForm={validateForm}

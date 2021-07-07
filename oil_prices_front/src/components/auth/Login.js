@@ -28,7 +28,7 @@ const Login = ({ url, logged }) => {
   };
 
   return (
-    <section id="login">
+    <section id="login" className="pt-5">
       <Row className="justify-content-md-center">
         <Col xs="6">
           <Card>

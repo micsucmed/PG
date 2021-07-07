@@ -11,12 +11,12 @@ const Histogram = ({ data, p }) => {
   const z = jStat.normal.inv(alpha, 0, 1);
   const ic_l = mean - z * sdev;
   const ic_r = mean + z * sdev;
+  var min = mean - jStat.normal.inv(0.995, 0, 1) * sdev;
+  var max = mean + jStat.normal.inv(0.995, 0, 1) * sdev;
 
   canvas.selectAll("*").remove();
 
   const graph = function (data) {
-    const processed = data;
-
     const widthValue = 700;
     const heightValue = 500;
 
@@ -31,12 +31,9 @@ const Histogram = ({ data, p }) => {
     const width = 700 - margin.left - margin.right - strokeWidth * 2;
     const height = 500 - margin.top - margin.bottom;
 
-    var bins = d3.bin().thresholds(30)(processed);
+    var bins = d3.bin().thresholds(50)(data);
 
-    var x = d3
-      .scaleLinear()
-      .domain([bins[0].x0, bins[bins.length - 1].x1])
-      .range([0, width]);
+    var x = d3.scaleLinear().domain([min, max]).range([0, width]);
 
     var y = d3
       .scaleLinear()
@@ -44,7 +41,6 @@ const Histogram = ({ data, p }) => {
       .range([height, 5]);
 
     const bars = g.selectAll("rect").data(bins);
-    console.log(bars.enter());
 
     bars
       .enter()
@@ -122,8 +118,8 @@ const Histogram = ({ data, p }) => {
     g.append("line")
       .attr("x1", x(ic_l))
       .attr("x2", x(ic_l))
-      .attr("y1", 0)
-      .attr("y2", height)
+      .attr("y1", y(0))
+      .attr("y2", 20)
       .attr("stroke", "grey")
       .attr("stroke-dasharray", "4");
 
@@ -131,19 +127,19 @@ const Histogram = ({ data, p }) => {
       .attr("x1", x(ic_r))
       .attr("x2", x(ic_r))
       .attr("y1", y(0))
-      .attr("y2", 0)
+      .attr("y2", 20)
       .attr("stroke", "grey")
       .attr("stroke-dasharray", "4");
 
     g.append("text")
-      .attr("x", x(ic_l) - 42)
+      .attr("x", x(ic_l) - 20)
       .attr("y", 20)
       .text(`${parseFloat(ic_l.toFixed(5))}`)
       .style("font-size", "10px");
 
     g.append("text")
-      .attr("x", x(ic_r) + 2)
-      .attr("y", 20)
+      .attr("x", x(ic_r) - 20)
+      .attr("y", 10)
       .text(`${parseFloat(ic_r.toFixed(5))}`)
       .style("font-size", "10px");
   };
