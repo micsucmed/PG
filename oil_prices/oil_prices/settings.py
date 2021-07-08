@@ -34,7 +34,7 @@ worker_concurrency = 50
 # SECRET_KEY = 'django-insecure-o5*04t69pzo&@k(84juq2y9nl5khlg$!j)htl5pa9fn*fvm4^e'
 SECRET_KEY = os.environ['PG_SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
