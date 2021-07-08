@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 import GeneralForm from "../layout/GeneralForm";
 
@@ -62,22 +62,24 @@ const Signup = ({ url, logged }) => {
   };
 
   return (
-    <Row className="justify-content-md-center pt-5">
-      <Col xs="6">
-        <Card>
-          <Card.Body>
-            <Card.Title>Singup</Card.Title>
-            <GeneralForm
-              fields={fields}
-              validateForm={validateForm}
-              apiRoute={url + "api/accounts/register/"}
-              strength={true}
-              submit={submit}
-            />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+    <Container fluid>
+      <Row className="justify-content-center pt-4">
+        <Col xs="6">
+          <Card>
+            <Card.Body>
+              <Card.Title>Singup</Card.Title>
+              <GeneralForm
+                fields={fields}
+                validateForm={validateForm}
+                apiRoute={url + "api/accounts/register/"}
+                strength={true}
+                submit={submit}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

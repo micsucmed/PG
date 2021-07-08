@@ -1,6 +1,6 @@
 import React from "react";
 import GeneralForm from "../layout/GeneralForm";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Login = ({ url, logged }) => {
@@ -28,7 +28,7 @@ const Login = ({ url, logged }) => {
   };
 
   return (
-    <section id="login" className="pt-5">
+    <Container id="login" className="pt-5">
       <Row className="justify-content-md-center">
         <Col xs="6">
           <Card>
@@ -50,7 +50,7 @@ const Login = ({ url, logged }) => {
           </Card>
         </Col>
       </Row>
-    </section>
+    </Container>
   );
 };
 

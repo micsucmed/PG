@@ -20,6 +20,7 @@ from sklearn.linear_model import LinearRegression
 from fredapi import Fred
 from datetime import date, datetime, timedelta
 from scipy.stats import norm
+import os
 
 # Create your views here.
 
@@ -32,14 +33,14 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps, petition_id)
         mydata = quandl.get(
                 "FRED/DCOILBRENTEU",
                 returns="pandas",
-                authtoken="7gMvGvRq_p7EH3iWZnW5",
+                authtoken=os.environ['QUANDL_API_KEY'],
                 end_date=end_date
             )
     else:
         mydata = quandl.get(
                 "FRED/DCOILWTICO",
                 returns="pandas",
-                authtoken="7gMvGvRq_p7EH3iWZnW5",
+                authtoken=os.environ['QUANDL_API_KEY'],
                 end_date=end_date
             )
     # Performs the simulation
@@ -51,7 +52,9 @@ def createMBGSimulations(p_date, oil_reference, num_days, num_reps, petition_id)
     sigma = (numpy.std(df['Log-Return'][1:]))*math.sqrt(252)
 
     # Risk free rate
-    fred = Fred(api_key="b6a7119857170bd5943832561d969285")
+    # fred = Fred(api_key="b6a7119857170bd5943832561d969285")
+    # Risk free rate
+    fred = Fred(api_key=os.environ['PG_FRED_API_KEY'])
     series = fred.get_series_as_of_date('TB3MS', end_date)
     data = pd.DataFrame(data=series)
     rf = (data['value'].values[-1])
@@ -135,14 +138,14 @@ def createMBGMRSimulations(p_date, oil_reference, num_days, num_reps, petition_i
         mydata = quandl.get(
                 "FRED/DCOILBRENTEU",
                 returns="pandas",
-                authtoken="7gMvGvRq_p7EH3iWZnW5",
+                authtoken=os.environ['QUANDL_API_KEY'],
                 end_date=end_date
             )
     else:
         mydata = quandl.get(
                 "FRED/DCOILWTICO",
                 returns="pandas",
-                authtoken="7gMvGvRq_p7EH3iWZnW5",
+                authtoken=os.environ['QUANDL_API_KEY'],
                 end_date=end_date
             )
     

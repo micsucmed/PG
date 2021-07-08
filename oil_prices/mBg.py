@@ -10,9 +10,10 @@ import statistics
 from fredapi import Fred
 import pandas_datareader
 from scipy.stats import norm
+import os
 
 # Obtener la informacion historica del precio para el WTI y calcular sus retornos logaritmicos
-mydata = quandl.get("FRED/DCOILWTICO", returns="pandas", authtoken="7gMvGvRq_p7EH3iWZnW5")
+mydata = quandl.get("FRED/DCOILWTICO", returns="pandas", authtoken=os.environ['QUANDL_API_KEY'])
 # mydata = quandl.get("FRED/DCOILBRENTEU", returns="pandas", authtoken="7gMvGvRq_p7EH3iWZnW5")
 df1 = numpy.log(mydata / mydata.shift(1))
 df1.columns = df1.columns.map(lambda x: x.replace('Value', 'Log-Return'))

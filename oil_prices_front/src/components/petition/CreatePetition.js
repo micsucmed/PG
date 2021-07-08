@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 import GeneralForm from "../layout/GeneralForm";
 
@@ -78,21 +78,23 @@ const CreatePetition = ({ url }) => {
   const submit = () => {};
 
   return (
-    <Row className="justify-content-md-center pt-5">
-      <Col xs="6">
-        <Card>
-          <Card.Body>
-            <Card.Title>Create Simulation</Card.Title>
-            <GeneralForm
-              fields={fields}
-              validateForm={validateForm}
-              apiRoute={url + "api/petitions/"}
-              submit={submit}
-            />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+    <Container>
+      <Row className="justify-content-md-center pt-5">
+        <Col xs="6">
+          <Card>
+            <Card.Body>
+              <Card.Title>Create Simulation</Card.Title>
+              <GeneralForm
+                fields={fields}
+                validateForm={validateForm}
+                apiRoute={url + "api/petitions/"}
+                submit={submit}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
