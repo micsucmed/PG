@@ -8,11 +8,13 @@ from account.models import Account
 from petition.api import serializers
 from petition import models
 from petition.views import createMBGSimulations, createMBGMRSimulations
+from petition.tasks import create_petition_prices_task
 
 
 class Petitions(APIView):
+    perimission_classes=(IsAuthenticated,)
     def get(self, request):
-        petitions = models.Petition.objects.all()
+        petitions = models.Petition.objects.filter(owner=request.user)
         serializer = serializers.PetitionSerializer(petitions, many=True)
         return Response(serializer.data)
 
@@ -24,13 +26,17 @@ class Petitions(APIView):
             oil_reference = request.data.get('oil_reference')
             num_days = request.data.get('num_days')
             num_reps = request.data.get('num_reps')
-            prices = createMBGSimulations(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps)
-            serializer.save(prices=prices, owner=Account.objects.get(pk=owner_id))
+            sim_model = request.data.get('sim_model')
+            serializer.save(owner=request.user)
+            petition_id = serializer.data['id']
+            # createMBGSimulations(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps, petition_id=petition_id)
+            create_petition_prices_task.delay(p_date=date, oil_reference=oil_reference, num_days=num_days, num_reps=num_reps, sim_model=sim_model, petition_id=petition_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PetitionDetail(APIView):
+    permission_classes=(IsAuthenticatedOrReadOnly,)
     def get(self, request, petition_id):
         try:
             petition = models.Petition.objects.get(pk=petition_id)
@@ -47,17 +53,14 @@ class PetitionDetail(APIView):
         petition.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class GeneratePetitionSimulations(APIView):
+class Prices(APIView):
     def get(self, request, petition_id):
-        try:
-            petition = models.Petition.objects.get(pk=petition_id)
-        except models.Petition.DoesNotExist:
-            raise Http404
-        if petition.sim_model == 'MBG':
-            createMBGSimulations(petition.id)
-            return Response(status.HTTP_200_OK)
-        elif petition.sim_model == 'MBGMR':
-            createMBGMRSimulations(petition.id)
-            return Response(status.HTTP_200_OK)
-        else:
-            raise ValueError("Ocurrio un error con el modelo, intente nuevamente.")
+        prices = models.Price.objects.get(petition_id=petition_id)
+        serializer = serializers.PriceSerializer(prices)
+        return Response(serializer.data)
+
+# class Intervals(APIView):
+#     def get(self, request, petition_id):
+#         cis = models.ConfidenceInterval.objects.get(petition_id=petition_id)
+#         serializer = serializers.ConfidenceIntervalSerializer(cis)
+#         return Response(serializer.data)

@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from account.models import Account
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class Petition(models.Model):
@@ -18,5 +18,14 @@ class Petition(models.Model):
             (MBGMR, 'Movimiento Browniano Gometrico simple con Reversion a la Media')
         ]
     sim_model = models.CharField(max_length=50, choices=MODEL_CHOICES)
-    prices = ArrayField(ArrayField(models.FloatField()))
     date = models.DateField(auto_now=False, auto_now_add=False)
+    processed = models.BooleanField(default=False)
+
+    def clean(self):
+        self.processed = True
+        self.save()
+
+class Price(models.Model):
+    petition = models.OneToOneField(Petition, on_delete=models.CASCADE)
+    prices = ArrayField(ArrayField(models.FloatField()))
+    ci = ArrayField(ArrayField(ArrayField(models.FloatField())))

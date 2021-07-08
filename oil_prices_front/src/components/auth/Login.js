@@ -1,16 +1,18 @@
 import React from "react";
 import GeneralForm from "../layout/GeneralForm";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Login = ({ url, logged }) => {
   const fields = [
     {
-      label: "Username",
-      type: "text",
+      label: "Email",
+      name: "username",
+      type: "email",
     },
     {
       label: "Password",
+      name: "password",
       type: "password",
     },
   ];
@@ -20,8 +22,13 @@ const Login = ({ url, logged }) => {
     return err;
   };
 
+  const submit = (response) => {
+    localStorage.setItem("token", JSON.stringify(response.data["token"]));
+    logged();
+  };
+
   return (
-    <section id="login">
+    <Container id="login" className="pt-5">
       <Row className="justify-content-md-center">
         <Col xs="6">
           <Card>
@@ -31,24 +38,19 @@ const Login = ({ url, logged }) => {
                 fields={fields}
                 validateForm={validateForm}
                 apiRoute={url + "api/accounts/login/"}
-                logged={logged}
+                submit={submit}
               />
               <div className="text-center">
                 <Card.Text>Don't have an account?</Card.Text>
-                <Button>
-                  <Link
-                    style={{ textDecoration: "none", color: "white" }}
-                    to="/signup"
-                  >
-                    Signup
-                  </Link>
-                </Button>
+                <Link to="/signup">
+                  <Button variant="link">Signup</Button>
+                </Link>
               </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
-    </section>
+    </Container>
   );
 };
 
