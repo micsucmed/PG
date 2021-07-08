@@ -63,6 +63,7 @@ function App({ url }) {
           </Route>
         </div>
       </main>
+      <footer className="footer">Oil Prices</footer>
     </Router>
   );
 }

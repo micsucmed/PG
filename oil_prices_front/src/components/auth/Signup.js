@@ -13,11 +13,6 @@ const Signup = ({ url, logged }) => {
       muted: "Your information will not be shared with anyone.",
     },
     {
-      label: "Username",
-      name: "username",
-      type: "text",
-    },
-    {
       label: "Password",
       name: "password",
       type: "password",
@@ -52,7 +47,7 @@ const Signup = ({ url, logged }) => {
 
   const submit = (reponse, values) => {
     const loginValues = {
-      "username": values.username,
+      "email": values.email,
       "password": values.password,
     };
     axios

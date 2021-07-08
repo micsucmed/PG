@@ -23,32 +23,34 @@ const Days = ({ prices }) => {
         </Card.Body>
         <Card.Footer>
           <Row>
-            <Container className="pb-4">
-              <Card.Text className="mb-0">Day:</Card.Text>
-              <RangeSlider
-                value={value}
-                onChange={(changeEvent) => setValue(changeEvent.target.value)}
-                onAfterChange={(changeEvent) =>
-                  setDay(changeEvent.target.value)
-                }
-                min={1}
-                max={prices.length - 1}
-                tooltip="on"
-              />
-            </Container>
-          </Row>
-          <Row>
-            <Container className="mb-4">
-              <Card.Text className="mb-0">Significance level:</Card.Text>
-              <RangeSlider
-                value={p}
-                onChange={(changeEvent) => setP(changeEvent.target.value)}
-                min={0}
-                max={1}
-                step={0.01}
-                tooltip="on"
-              />
-            </Container>
+            <Col className="border-right">
+              <Container className="mb-4">
+                <Card.Text className="mb-0">Significance level:</Card.Text>
+                <RangeSlider
+                  value={p}
+                  onChange={(changeEvent) => setP(changeEvent.target.value)}
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  tooltip="on"
+                />
+              </Container>
+            </Col>
+            <Col>
+              <Container className="pb-4">
+                <Card.Text className="mb-0">Day:</Card.Text>
+                <RangeSlider
+                  value={value}
+                  onChange={(changeEvent) => setValue(changeEvent.target.value)}
+                  onAfterChange={(changeEvent) =>
+                    setDay(changeEvent.target.value)
+                  }
+                  min={1}
+                  max={prices.length - 1}
+                  tooltip="on"
+                />
+              </Container>
+            </Col>
           </Row>
         </Card.Footer>
       </Card>

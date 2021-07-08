@@ -16,6 +16,11 @@ const Paths = ({ prices }) => {
           <LoadingIndicator area="line-graph-area" />
           {renderLineGraph()}
         </Card.Body>
+        <Card.Footer>
+          <Card.Text>
+            Each line represents a possible path in which the oil price might go
+          </Card.Text>
+        </Card.Footer>
       </Card>
     </Col>
   );

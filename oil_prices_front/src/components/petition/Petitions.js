@@ -55,14 +55,12 @@ const Petitions = ({ url }) => {
       {renderSimulations()}
       <hr />
       <Container fluid className="text-center pt-3">
-        <Button className="btn-success">
-          <Link
-            style={{ textDecoration: "none", color: "white" }}
-            to="/create-petition"
-          >
-            Create Simulation
-          </Link>
-        </Button>
+        <Link
+          style={{ textDecoration: "none", color: "white" }}
+          to="/create-petition"
+        >
+          <Button className="btn-success">Create Simulation</Button>
+        </Link>
       </Container>
     </Container>
   );

@@ -33,12 +33,18 @@ const Histogram = ({ data, p }) => {
 
     var bins = d3.bin().thresholds(50)(data);
 
-    var x = d3.scaleLinear().domain([min, max]).range([0, width]);
+    var x = d3
+      .scaleLinear()
+      .domain([
+        d3.min([min, bins[0].x0]),
+        d3.max([max, bins[bins.length - 1].x1]),
+      ])
+      .range([0, width]);
 
     var y = d3
       .scaleLinear()
       .domain([0, d3.max(bins, (d) => d.length)])
-      .range([height, 5]);
+      .range([height, 22]);
 
     const bars = g.selectAll("rect").data(bins);
 
@@ -56,18 +62,44 @@ const Histogram = ({ data, p }) => {
         return height - y(d.length);
       })
       .style("fill", function (d) {
+        if (
+          d.x1 > ic_l &&
+          d.x0 < ic_l &&
+          ic_r - ic_l < d.x1 - d.x0 &&
+          d.x0 < ic_r &&
+          d.x1 > ic_r
+        ) {
+          g.append("rect")
+            .attr("transform", "translate(" + x(d.x0) + "," + y(d.length) + ")")
+            .attr("width", x(ic_l) - x(d.x0))
+            .attr("height", height - y(d.length))
+            .style("fill", "#122C34");
+
+          g.append("rect")
+            .attr("transform", "translate(" + x(ic_l) + "," + y(d.length) + ")")
+            .attr("width", x(ic_r) - x(ic_l))
+            .attr("height", height - y(d.length))
+            .style("fill", "#00A5CF");
+
+          g.append("rect")
+            .attr("transform", "translate(" + x(ic_r) + "," + y(d.length) + ")")
+            .attr("width", x(d.x1) - x(ic_r))
+            .attr("height", height - y(d.length))
+            .style("fill", "#122C34");
+          return "transparent";
+        }
         if (d.x1 > ic_l && d.x0 < ic_l) {
           g.append("rect")
             .attr("transform", "translate(" + x(d.x0) + "," + y(d.length) + ")")
             .attr("width", x(ic_l) - x(d.x0))
             .attr("height", height - y(d.length))
-            .style("fill", "#69b3a2");
+            .style("fill", "#122C34");
 
           g.append("rect")
             .attr("transform", "translate(" + x(ic_l) + "," + y(d.length) + ")")
             .attr("width", x(d.x1) - x(ic_l))
             .attr("height", height - y(d.length))
-            .style("fill", "orange");
+            .style("fill", "#00A5CF");
           return "transparent";
         }
         if (d.x0 < ic_r && d.x1 > ic_r) {
@@ -75,19 +107,19 @@ const Histogram = ({ data, p }) => {
             .attr("transform", "translate(" + x(d.x0) + "," + y(d.length) + ")")
             .attr("width", x(ic_r) - x(d.x0))
             .attr("height", height - y(d.length))
-            .style("fill", "orange");
+            .style("fill", "#00A5CF");
 
           g.append("rect")
             .attr("transform", "translate(" + x(ic_r) + "," + y(d.length) + ")")
             .attr("width", x(d.x1) - x(ic_r))
             .attr("height", height - y(d.length))
-            .style("fill", "#69b3a2");
+            .style("fill", "#122C34");
           return "transparent";
         }
         if (d.x0 > ic_l && d.x0 < ic_r) {
-          return "orange";
+          return "#00A5CF";
         } else {
-          return "#69b3a2";
+          return "#122C34";
         }
       });
 

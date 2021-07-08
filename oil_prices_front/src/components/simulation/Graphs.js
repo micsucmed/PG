@@ -8,7 +8,7 @@ const Graphs = ({ prices, ci }) => {
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="line-graph">
       <Row className="py-3">
-        <Col md={4} className="pr-0 pl-4">
+        <Col md={2} className="pr-0 pl-4">
           <Nav variant="pills" className="flex-column pr-4 pr-md-0">
             <Nav.Item>
               <Nav.Link eventKey="line-graph">Line Graph</Nav.Link>
@@ -21,7 +21,8 @@ const Graphs = ({ prices, ci }) => {
             </Nav.Item>
           </Nav>
         </Col>
-        <Col md={8}>
+        <Col md={2} className="pr-0 pl-4"></Col>
+        <Col md={6} className="pr-2 pl-2">
           <Tab.Content>
             <Tab.Pane eventKey="line-graph">
               <Paths prices={prices} />

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Toast } from "react-bootstrap";
+import { Form, Button, Row, Col, Toast, Modal } from "react-bootstrap";
 import _ from "lodash";
 import axios from "axios";
 import PasswordStrengthBar from "react-password-strength-bar";
+
+import { Link } from "react-router-dom";
 
 // import history from "../history";
 // import "../css/form.css";
@@ -11,7 +13,10 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [showMessage, setShowMessage] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [serverErr, setServerErr] = useState("");
+  const [formErr, setFormErr] = useState({});
 
   useEffect(() => {
     const object = {};
@@ -52,7 +57,6 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
             submit(response, values);
           })
           .catch((error) => {
-            console.log(error);
             setServerErr(error.message);
             toggleShowMessage();
           });
@@ -66,20 +70,25 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
             },
           })
           .then((response) => {
-            console.log(response);
+            toggleSuccessModal();
           })
           .catch((error) => {
-            console.log(error);
             setServerErr(error.message);
             toggleShowMessage();
+            setTimeout(toggleShowMessage(), 5);
           });
       }
     } else {
-      console.log(err);
+      setFormErr(err);
+      toggleShowModal();
     }
   };
 
   const toggleShowMessage = () => setShowMessage(!showMessage);
+
+  const toggleShowModal = () => setShowModal(!showModal);
+
+  const toggleSuccessModal = () => setShowSuccessModal(!showSuccessModal);
 
   const toast = () => {
     return (
@@ -99,6 +108,54 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
           </Toast>
         </Col>
       </Row>
+    );
+  };
+
+  const formErrors = () => {
+    let err = [];
+    for (const [, value] of Object.entries(formErr)) {
+      err.push(value);
+    }
+
+    return err.map((e) => {
+      return <li>{e}</li>;
+    });
+  };
+
+  const modal = () => {
+    return (
+      <Modal show={showModal} onHide={toggleShowModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Input Error(s) found</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <ul>{formErrors()}</ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={toggleShowModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  const successModal = () => {
+    return (
+      <Modal show={showSuccessModal} onHide={toggleSuccessModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Your simulation has been created</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Link to="/petitions">
+            <Button variant="secondary">Go to simulations</Button>
+          </Link>
+          <Button variant="primary" onClick={toggleSuccessModal}>
+            Create another simulation
+          </Button>
+        </Modal.Footer>
+      </Modal>
     );
   };
 
@@ -155,12 +212,14 @@ const GeneralForm = ({ fields, validateForm, apiRoute, strength, submit }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form id="form" onSubmit={handleSubmit}>
       {renderFields()}
       <Button variant="primary" type="submit">
         Send
       </Button>
       {toast()}
+      {modal()}
+      {successModal()}
     </Form>
   );
 };

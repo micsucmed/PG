@@ -15,7 +15,7 @@ const LoadingIndicator = (props) => {
           </Alert>
         </Row>
         <Row className="justify-content-center">
-          <Loader type="ThreeDots" color="#1abc9c" height="100" width="100" />
+          <Loader type="ThreeDots" color="#256EFF" height="100" width="100" />
         </Row>
       </Container>
     )

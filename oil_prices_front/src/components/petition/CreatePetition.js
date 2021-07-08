@@ -49,10 +49,18 @@ const CreatePetition = ({ url }) => {
     var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     var yyyy = today.getFullYear();
     today = yyyy + "-" + mm + "-" + dd;
-    if (values.num_days < 1) {
+    if (
+      values.num_days < 1 ||
+      values.num_days > 2530 ||
+      values.num_days === ""
+    ) {
       err.num_days = "Number of days to simulate must be greater than 1.";
     }
-    if (values.num_reps < 1 || values.num_reps > 10000) {
+    if (
+      values.num_reps < 1 ||
+      values.num_reps > 10000 ||
+      values.num_reps === ""
+    ) {
       err.num_reps = "Number of paths to simulate must be between 1 and 10000.";
     }
     if (values.oil_reference === "") {
@@ -61,7 +69,7 @@ const CreatePetition = ({ url }) => {
     if (values.sim_model === "") {
       err.sim_model = "Please select a simulation model";
     }
-    if (today.localeCompare(values.date) < 0) {
+    if (today.localeCompare(values.date) < 0 || values.date === "") {
       err.date = "Please select a valid date, no future dates allowed";
     }
     return err;

@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 const Login = ({ url, logged }) => {
   const fields = [
     {
-      label: "Username",
+      label: "Email",
       name: "username",
-      type: "text",
+      type: "email",
     },
     {
       label: "Password",
